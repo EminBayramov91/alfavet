@@ -1,0 +1,109 @@
+.section {
+  padding: var(--section-y) var(--page-gutter);
+  background: var(--color-section);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+  width: var(--container-width);
+  margin: 44px auto 0;
+}
+
+.contactPanel {
+  display: grid;
+  gap: 22px;
+  padding: 30px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  backdrop-filter: var(--surface-blur);
+}
+
+.contactRow {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.contactRow h3 {
+  margin-bottom: 6px;
+  color: var(--color-heading);
+  font-size: 17px;
+  font-weight: 850;
+}
+
+.contactRow a,
+.contactRow p {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.contactRow a:hover {
+  color: var(--color-accent-strong);
+}
+
+.iconBox {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  color: var(--color-on-accent);
+  background: var(--color-coral);
+  border-radius: 8px;
+}
+
+.iconBox svg {
+  width: 21px;
+  height: 21px;
+}
+
+.contactActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.mapPanel {
+  overflow: hidden;
+  min-height: 486px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  backdrop-filter: var(--surface-blur);
+}
+
+.mapFrame {
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+}
+
+.mapFrame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+
+.mapOpenArea {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mapPanel {
+    min-height: 420px;
+  }
+}

@@ -1,0 +1,92 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.sm {
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.md {
+  min-height: 46px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.lg {
+  min-height: 54px;
+  padding: 0 22px;
+  font-size: 15px;
+}
+
+.primary {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+}
+
+.primary:hover {
+  background: var(--color-accent-strong);
+  transform: translateY(-1px);
+}
+
+.secondary {
+  color: var(--color-heading);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.secondary:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.ghost {
+  color: var(--color-heading);
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+.ghost:hover {
+  background: var(--color-surface-alt);
+  border-color: var(--color-accent);
+}
+
+.dark {
+  color: var(--color-on-deep);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(14px);
+}
+
+.dark:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.iconSlot {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
+
+.iconSlot svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.2;
+}

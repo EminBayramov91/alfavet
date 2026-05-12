@@ -1,0 +1,35 @@
+.section {
+  padding: var(--section-y) var(--page-gutter);
+  background: var(--color-section);
+}
+
+.logoRail {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: var(--container-width);
+  margin: 42px auto 0;
+}
+
+.logoItem {
+  display: grid;
+  place-items: center;
+  min-height: 154px;
+  padding: 26px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  backdrop-filter: var(--surface-blur);
+}
+
+.logoItem img {
+  width: min(180px, 100%);
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .logoRail {
+    grid-template-columns: 1fr;
+  }
+}

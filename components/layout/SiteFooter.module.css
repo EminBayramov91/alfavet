@@ -1,0 +1,114 @@
+.footer {
+  padding: 56px 20px 28px;
+  background: var(--footer-background);
+}
+
+.footerPanel {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.9fr) minmax(130px, 0.55fr) minmax(180px, 0.75fr) minmax(320px, 1.25fr);
+  gap: 42px;
+  align-items: start;
+  width: var(--container-width);
+  margin: 0 auto;
+  padding: 38px 36px 26px;
+  background: var(--footer-panel-bg);
+  border: 0;
+  border-radius: 8px;
+  backdrop-filter: none;
+}
+
+.brand {
+  display: grid;
+  align-content: start;
+}
+
+.brand img {
+  width: 156px;
+  height: auto;
+}
+
+.footerGroup {
+  display: grid;
+  gap: 14px;
+}
+
+.footerTitle {
+  color: var(--footer-title);
+  font-size: 13px;
+  font-weight: 820;
+}
+
+.footerNav {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.footerLink {
+  width: fit-content;
+  color: var(--footer-text);
+  font-size: 13px;
+  font-weight: 680;
+  transition: color 180ms ease;
+}
+
+.footerLink:hover {
+  color: var(--color-accent-strong);
+}
+
+.contactList {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  color: var(--footer-text);
+  list-style: none;
+}
+
+.contactList li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  font-weight: 680;
+  line-height: 1.5;
+}
+
+.contactList svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.contactList a {
+  color: inherit;
+  transition: color 180ms ease;
+}
+
+.contactList a:hover {
+  color: var(--color-accent-strong);
+}
+
+.phoneList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.phoneLink {
+  width: fit-content;
+}
+
+@media (max-width: 980px) {
+  .footerPanel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .footerPanel {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 30px 22px 24px;
+  }
+}
