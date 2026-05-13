@@ -62,9 +62,15 @@
   height: clamp(360px, 54vw, 620px);
   overflow: hidden;
   border-radius: 8px;
+  cursor: grab;
+  touch-action: pan-y;
   --drag-x: 0px;
   --drag-x-soft: 0px;
   --drag-x-far: 0px;
+}
+
+.sliderDragging .stage {
+  cursor: grabbing;
 }
 
 .slideCard {
@@ -91,6 +97,13 @@
 .slideCard img,
 .thumbnailButton img {
   object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.sliderDragging .slideCard {
+  cursor: grabbing;
 }
 
 .activeSlide {

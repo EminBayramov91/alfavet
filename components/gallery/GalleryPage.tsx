@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { CSSProperties } from "react";
-import { useMemo, useState } from "react";
+import type { CSSProperties, PointerEvent } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAppSettings } from "@/app/providers";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ContactCta } from "@/components/shared/ContactCta";
 import styles from "./GalleryPage.module.css";
 
 const imageSources = [
@@ -48,6 +49,7 @@ function getPositionClass(offset: number) {
 
 export function GalleryPage() {
   const { t } = useAppSettings();
+  const dragDeltaRef = useRef(0);
   const slides = useMemo(
     () =>
       imageSources.map((src, index) => ({
@@ -85,6 +87,42 @@ export function GalleryPage() {
     setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
   const goToNext = () =>
     setActiveIndex((current) => (current + 1) % slides.length);
+  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragDeltaRef.current = 0;
+    setDragState({
+      startX: event.clientX,
+      deltaX: 0,
+      isDragging: true,
+    });
+  };
+  const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
+    setDragState((current) => {
+      if (!current?.isDragging) return current;
+
+      const deltaX = event.clientX - current.startX;
+      dragDeltaRef.current = deltaX;
+
+      return {
+        ...current,
+        deltaX,
+      };
+    });
+  };
+  const endDrag = (event: PointerEvent<HTMLDivElement>) => {
+    const movement = dragDeltaRef.current;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (Math.abs(movement) > 48) {
+      if (movement > 0) goToPrevious();
+      else goToNext();
+    }
+
+    setDragState(null);
+  };
 
   return (
     <div className={styles.page}>
@@ -104,39 +142,16 @@ export function GalleryPage() {
               if (event.key === "ArrowLeft") goToPrevious();
               if (event.key === "ArrowRight") goToNext();
             }}
-            onPointerCancel={() => setDragState(null)}
-            onPointerDown={(event) => {
-              event.currentTarget.setPointerCapture(event.pointerId);
-              setDragState({
-                startX: event.clientX,
-                deltaX: 0,
-                isDragging: true,
-              });
-            }}
-            onPointerMove={(event) => {
-              setDragState((current) => {
-                if (!current?.isDragging) return current;
-
-                return {
-                  ...current,
-                  deltaX: event.clientX - current.startX,
-                };
-              });
-            }}
-            onPointerUp={(event) => {
-              if (!dragState?.isDragging) return;
-              const movement = event.clientX - dragState.startX;
-
-              if (Math.abs(movement) > 48) {
-                if (movement > 0) goToPrevious();
-                else goToNext();
-              }
-
-              setDragState(null);
-            }}
             tabIndex={0}
           >
-            <div className={styles.stage} style={stageStyle}>
+            <div
+              className={styles.stage}
+              onPointerCancel={() => setDragState(null)}
+              onPointerDown={startDrag}
+              onPointerMove={moveDrag}
+              onPointerUp={endDrag}
+              style={stageStyle}
+            >
               {slides.map((slide, index) => {
                 const offset = getOffset(index, activeIndex, slides.length);
                 const positionClass = getPositionClass(offset);
@@ -148,13 +163,14 @@ export function GalleryPage() {
                     className={[styles.slideCard, positionClass].join(" ")}
                     key={slide.src}
                     onClick={() => {
-                      if (dragState && Math.abs(dragState.deltaX) > 8) return;
+                      if (Math.abs(dragDeltaRef.current) > 8) return;
                       setActiveIndex(index);
                     }}
                     type="button"
                   >
                     <Image
                       alt={slide.title}
+                      draggable={false}
                       fill
                       priority={index === 0}
                       sizes="(max-width: 760px) 90vw, 760px"
@@ -203,12 +219,13 @@ export function GalleryPage() {
                   onClick={() => setActiveIndex(index)}
                   type="button"
                 >
-                  <Image alt="" fill sizes="96px" src={slide.src} />
+                  <Image alt="" draggable={false} fill sizes="96px" src={slide.src} />
                 </button>
               ))}
             </div>
           </div>
         </section>
+        <ContactCta />
       </main>
       <SiteFooter />
     </div>

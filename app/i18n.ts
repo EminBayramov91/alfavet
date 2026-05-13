@@ -24,14 +24,14 @@ export const dictionaries = {
     },
     hero: {
       eyebrow: "Alfavet baytarlıq klinikası",
-      title: "Ev heyvanınız üçün sakit, dəqiq və qayğıkeş tibbi xidmət",
+      title: "Ev heyvanınız üçün ən yaxşı seçim",
       lead: "Bakıdakı Alfavet komandası müayinə, diaqnostika, vaksinasiya və sənədləşməni bir yerdə, əvvəlcədən yazılışla təşkil edir.",
       primary: "Qəbula yazıl",
       secondary: "Xidmətlərə bax",
     },
     aboutPage: {
       heroEyebrow: "Klinika haqqında",
-      heroTitle: "2015-ci ildən Bakıda ev heyvanları üçün diqqətli baytarlıq xidməti",
+      heroTitle: "Bakıda ev heyvanları üçün baytarlıq xidməti",
       heroLead:
         "Alfavet peşəkar tibbi yardım, diaqnostika və sənədləşməni bir klinikada birləşdirir ki, sahib müalicə üçün müxtəlif ünvanlara getməsin.",
       primary: "Qəbula yazıl",
@@ -272,14 +272,14 @@ export const dictionaries = {
     },
     hero: {
       eyebrow: "Alfavet veterinary clinic",
-      title: "Calm, precise and compassionate care for your pet",
+      title: "The best choice for your pet",
       lead: "Alfavet in Baku brings examination, diagnostics, vaccination and paperwork into one clear appointment-led experience.",
       primary: "Book a visit",
       secondary: "View services",
     },
     aboutPage: {
       heroEyebrow: "About the clinic",
-      heroTitle: "Thoughtful veterinary care for pets in Baku since 2015",
+      heroTitle: "Veterinary care for pets in Baku",
       heroLead:
         "Alfavet brings medical care, diagnostics and paperwork into one clinic, so owners do not need to visit several places for examination and treatment.",
       primary: "Book a visit",
@@ -520,14 +520,14 @@ export const dictionaries = {
     },
     hero: {
       eyebrow: "Ветеринарная клиника Alfavet",
-      title: "Спокойная и точная забота о вашем питомце",
+      title: "Лучший выбор для вашего питомца",
       lead: "Alfavet в Баку объединяет осмотр, диагностику, вакцинацию и оформление документов в понятный приём по записи.",
       primary: "Записаться",
       secondary: "Смотреть услуги",
     },
     aboutPage: {
       heroEyebrow: "О клинике",
-      heroTitle: "Внимательная ветеринарная помощь питомцам в Баку с 2015 года",
+      heroTitle: "Ветеринарная помощь питомцам в Баку",
       heroLead:
         "Alfavet объединяет медицинскую помощь, диагностику и оформление документов в одной клинике, чтобы владельцу не приходилось ездить в разные места для обследования и лечения.",
       primary: "Записаться",

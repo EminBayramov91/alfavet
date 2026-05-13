@@ -1,13 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import {
-  CalendarCheck,
-  MessageCircle,
-} from "lucide-react";
+import { CalendarCheck, MessageCircle } from "lucide-react";
 import { useAppSettings } from "@/app/providers";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ContactCta } from "@/components/shared/ContactCta";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import styles from "./AboutPage.module.css";
@@ -55,8 +53,18 @@ export function AboutPage() {
               <h1>{t.aboutPage.heroTitle}</h1>
               <p>{t.aboutPage.heroLead}</p>
               <div className={styles.heroActions}>
-                <Button href="/appointment" icon={<CalendarCheck />} size="lg">
+                <Button href="/contacts" icon={<CalendarCheck />} size="lg">
                   {t.aboutPage.primary}
+                </Button>
+                <Button
+                  href="https://wa.me/994503344423"
+                  icon={<MessageCircle />}
+                  rel="noreferrer"
+                  size="lg"
+                  target="_blank"
+                  variant="dark"
+                >
+                  {t.contacts.whatsapp}
                 </Button>
               </div>
             </div>
@@ -135,30 +143,7 @@ export function AboutPage() {
           </div>
         </section>
 
-        <section className={styles.ctaSection}>
-          <div className={styles.ctaInner}>
-            <div>
-              <p className={styles.eyebrow}>{t.contacts.eyebrow}</p>
-              <h2>{t.aboutPage.ctaTitle}</h2>
-              <p>{t.aboutPage.ctaText}</p>
-            </div>
-            <div className={styles.ctaActions}>
-              <Button href="/appointment" icon={<CalendarCheck />} size="lg">
-                {t.aboutPage.primary}
-              </Button>
-              <Button
-                href="https://wa.me/994503344423"
-                icon={<MessageCircle />}
-                size="lg"
-                target="_blank"
-                rel="noreferrer"
-                variant="ghost"
-              >
-                {t.contacts.whatsapp}
-              </Button>
-            </div>
-          </div>
-        </section>
+        <ContactCta title={t.aboutPage.ctaTitle} text={t.aboutPage.ctaText} />
       </main>
       <SiteFooter />
     </div>

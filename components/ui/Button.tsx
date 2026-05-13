@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 import styles from "./Button.module.css";
 
@@ -47,8 +48,23 @@ export function Button({
       <span>{children}</span>
     </>
   );
+  const isInternalLink =
+    href?.startsWith("/") && !target && !href.startsWith("//");
 
   if (href) {
+    if (isInternalLink) {
+      return (
+        <Link
+          aria-label={ariaLabel}
+          className={buttonClassName}
+          href={href}
+          onClick={onClick}
+        >
+          {content}
+        </Link>
+      );
+    }
+
     return (
       <a
         aria-label={ariaLabel}

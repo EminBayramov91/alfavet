@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Languages, Menu, Moon, Sun, X } from "lucide-react";
 import { localeLabels, locales, type Locale } from "@/app/i18n";
@@ -12,13 +13,14 @@ const navItems = [
   { href: "/about", key: "about" },
   { href: "/services", key: "services" },
   { href: "/gallery", key: "gallery" },
-  { href: "/blog", key: "blog" },
   { href: "/contacts", key: "contacts" },
 ] as const;
 
 export function SiteHeader() {
   const { locale, setLocale, themeMode, toggleTheme, t } = useAppSettings();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   const closeMenu = () => setMenuOpen(false);
   const themeSwitchClassName = [
@@ -30,8 +32,34 @@ export function SiteHeader() {
     themeMode === "dark" ? styles.switchThumbDark : styles.switchThumbLight,
   ].join(" ");
 
+  useEffect(() => {
+    if (!menuOpen) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
+
   return (
-    <header className={styles.headerShell}>
+    <header className={styles.headerShell} ref={headerRef}>
       <div className={styles.headerInner}>
         <Link
           aria-label="Alfavet"
@@ -49,11 +77,27 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Primary navigation" className={styles.desktopNav}>
-          {navItems.map((item) => (
-            <Link className={styles.navLink} href={item.href} key={item.key}>
-              {t.nav[item.key]}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const linkClassName = [
+              styles.navLink,
+              isActive ? styles.navLinkActive : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+
+            return (
+              <Link
+                aria-current={isActive ? "page" : undefined}
+                className={linkClassName}
+                href={item.href}
+                key={item.key}
+              >
+                {t.nav[item.key]}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className={styles.actions}>
@@ -116,16 +160,28 @@ export function SiteHeader() {
             />
           </div>
 
-          {navItems.map((item) => (
-            <Link
-              className={styles.mobileLink}
-              href={item.href}
-              key={item.key}
-              onClick={closeMenu}
-            >
-              {t.nav[item.key]}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const linkClassName = [
+              styles.mobileLink,
+              isActive ? styles.mobileLinkActive : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+
+            return (
+              <Link
+                aria-current={isActive ? "page" : undefined}
+                className={linkClassName}
+                href={item.href}
+                key={item.key}
+                onClick={closeMenu}
+              >
+                {t.nav[item.key]}
+              </Link>
+            );
+          })}
         </div>
       ) : null}
     </header>

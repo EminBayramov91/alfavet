@@ -33,3 +33,38 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .section {
+    padding-block: 72px 64px;
+  }
+
+  .logoRail {
+    display: flex;
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-bottom: 14px;
+    scroll-padding-inline: var(--page-gutter);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .logoRail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .logoItem {
+    flex: 0 0 min(78vw, 310px);
+    min-height: 178px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 380px) {
+  .logoItem {
+    flex-basis: 82vw;
+  }
+}

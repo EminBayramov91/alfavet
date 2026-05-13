@@ -78,10 +78,39 @@
   .section {
     padding-block: 72px 64px;
   }
+
+  .servicesGrid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-bottom: 14px;
+    scroll-padding-inline: var(--page-gutter);
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .servicesGrid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .serviceCard {
+    flex: 0 0 min(78vw, 310px);
+    min-height: 188px;
+    padding: 20px;
+    scroll-snap-align: start;
+  }
+
+  .iconWrap {
+    width: 44px;
+    height: 44px;
+  }
 }
 
-@media (max-width: 520px) {
-  .servicesGrid {
-    grid-template-columns: 1fr;
+@media (max-width: 380px) {
+  .serviceCard {
+    flex-basis: 82vw;
   }
 }

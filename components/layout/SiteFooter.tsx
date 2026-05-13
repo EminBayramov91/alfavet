@@ -13,7 +13,6 @@ const footerNavItems = [
   { href: "/about", key: "about" },
   { href: "/services", key: "services" },
   { href: "/gallery", key: "gallery" },
-  { href: "/blog", key: "blog" },
   { href: "/contacts", key: "contacts" },
 ] as const;
 

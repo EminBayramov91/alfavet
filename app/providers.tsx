@@ -2,6 +2,7 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -29,28 +30,54 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
   const [themeMode, setThemeMode] = useState<ThemeMode>(defaultTheme);
 
+  const readStoredPreferences = useCallback(() => {
+    const storedLocale = window.localStorage.getItem("alfavet-locale");
+    const storedTheme = window.localStorage.getItem("alfavet-theme");
+
+    return {
+      locale:
+        storedLocale && locales.includes(storedLocale as Locale)
+          ? (storedLocale as Locale)
+          : defaultLocale,
+      theme:
+        storedTheme === "light" || storedTheme === "dark"
+          ? storedTheme
+          : defaultTheme,
+    };
+  }, []);
+
+  const applyStoredPreferences = useCallback(() => {
+    const stored = readStoredPreferences();
+
+    preferencesLoaded.current = true;
+    setLocaleState(stored.locale);
+    setThemeMode(stored.theme);
+  }, [readStoredPreferences]);
+
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const storedLocale = window.localStorage.getItem("alfavet-locale");
-      const storedTheme = window.localStorage.getItem("alfavet-theme");
-
-      preferencesLoaded.current = true;
-
-      if (storedLocale && locales.includes(storedLocale as Locale)) {
-        setLocaleState(storedLocale as Locale);
-      } else {
-        setLocaleState(defaultLocale);
-      }
-
-      if (storedTheme === "light" || storedTheme === "dark") {
-        setThemeMode(storedTheme);
-      } else {
-        setThemeMode(defaultTheme);
-      }
+      applyStoredPreferences();
     });
 
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
+    const handlePageShow = () => {
+      applyStoredPreferences();
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === "alfavet-locale" || event.key === "alfavet-theme") {
+        applyStoredPreferences();
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [applyStoredPreferences]);
 
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -62,16 +89,31 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     }
   }, [locale, themeMode]);
 
+  const setLocale = useCallback((nextLocale: Locale) => {
+    preferencesLoaded.current = true;
+    window.localStorage.setItem("alfavet-locale", nextLocale);
+    setLocaleState(nextLocale);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    preferencesLoaded.current = true;
+    setThemeMode((current) => {
+      const nextTheme = current === "light" ? "dark" : "light";
+
+      window.localStorage.setItem("alfavet-theme", nextTheme);
+      return nextTheme;
+    });
+  }, []);
+
   const value = useMemo<AppSettings>(
     () => ({
       locale,
-      setLocale: setLocaleState,
+      setLocale,
       themeMode,
-      toggleTheme: () =>
-        setThemeMode((current) => (current === "light" ? "dark" : "light")),
+      toggleTheme,
       t: dictionaries[locale],
     }),
-    [locale, themeMode],
+    [locale, setLocale, themeMode, toggleTheme],
   );
 
   return (
