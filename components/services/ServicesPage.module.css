@@ -106,6 +106,8 @@
 .processShell,
 .ctaPanel {
   width: var(--container-width);
+  max-width: 100%;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -120,6 +122,7 @@
   display: grid;
   align-content: space-between;
   gap: 22px;
+  min-width: 0;
   min-height: 260px;
   padding: 26px;
   overflow: hidden;
@@ -170,6 +173,7 @@
   font-size: clamp(24px, 3vw, 34px);
   font-weight: 900;
   line-height: 1.05;
+  overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
@@ -179,6 +183,7 @@
   color: var(--color-text-muted);
   font-size: 15px;
   line-height: 1.65;
+  overflow-wrap: break-word;
 }
 
 .pathCard span {
@@ -189,6 +194,7 @@
   font-size: 13px;
   font-weight: 800;
   line-height: 1.2;
+  overflow-wrap: anywhere;
   background: var(--color-surface-alt);
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -212,13 +218,13 @@
   font-size: clamp(32px, 4.6vw, 58px);
   font-weight: 900;
   line-height: 1.02;
+  overflow-wrap: anywhere;
   text-wrap: balance;
 }
 
 .processIntro h2 {
   max-width: 450px;
   font-size: clamp(30px, 3.5vw, 48px);
-  overflow-wrap: break-word;
 }
 
 .guideIntro p:not(.eyebrow),
@@ -227,6 +233,7 @@
   color: var(--color-text-muted);
   font-size: 16px;
   line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 .groupTabs {
@@ -235,8 +242,14 @@
   min-width: 0;
   padding-bottom: 4px;
   overflow-x: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.groupTabs::-webkit-scrollbar {
+  display: none;
 }
 
 .groupTab {
@@ -296,7 +309,9 @@
 .groupPanel {
   display: grid;
   gap: 22px;
+  width: 100%;
   min-height: 0;
+  min-width: 0;
   max-width: 780px;
 }
 
@@ -313,6 +328,7 @@
   font-size: clamp(28px, 3vw, 42px);
   font-weight: 900;
   line-height: 1.06;
+  overflow-wrap: anywhere;
 }
 
 .groupNotes {
@@ -329,6 +345,7 @@
   color: var(--color-text-muted);
   font-size: 15px;
   line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 .groupNotes li::before {
@@ -398,6 +415,7 @@
   font-size: 13px;
   font-weight: 850;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .selectedService {
@@ -419,12 +437,14 @@
   font-size: 22px;
   font-weight: 900;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .selectedService p {
   color: var(--color-text-muted);
   font-size: 15px;
   line-height: 1.7;
+  overflow-wrap: break-word;
 }
 
 .processShell {
@@ -437,12 +457,14 @@
 .processIntro {
   display: grid;
   gap: 14px;
+  min-width: 0;
 }
 
 .timeline {
   position: relative;
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .timeline::before {
@@ -496,6 +518,7 @@
   font-size: 24px;
   font-weight: 900;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .timelineItem p {
@@ -504,6 +527,7 @@
   color: var(--color-text-muted);
   font-size: 15px;
   line-height: 1.65;
+  overflow-wrap: break-word;
 }
 
 .ctaPanel {
@@ -587,13 +611,28 @@
     margin-left: calc(var(--page-gutter) * -1);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pathGrid::-webkit-scrollbar {
+    display: none;
   }
 
   .pathCard {
-    flex: 0 0 min(310px, 84vw);
+    flex: 0 0 min(300px, calc(100vw - (var(--page-gutter) * 3)));
     min-height: 320px;
     padding: 22px;
     scroll-snap-align: start;
+  }
+
+  .pathCard h2 {
+    font-size: clamp(26px, 8.4vw, 34px);
+  }
+
+  .pathCard span {
+    width: 100%;
   }
 
   .ctaPanel {
@@ -603,11 +642,16 @@
   .guideIntro h2,
   .processIntro h2,
   .ctaPanel h2 {
-    font-size: clamp(31px, 11vw, 42px);
+    font-size: clamp(30px, 10vw, 39px);
+    line-height: 1.06;
   }
 
   .groupHeader {
     grid-template-columns: 1fr;
+  }
+
+  .processIntro h2 {
+    max-width: 100%;
   }
 
   .servicePills {
@@ -620,6 +664,7 @@
     overflow-x: auto;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   .servicePills::-webkit-scrollbar {
@@ -638,11 +683,21 @@
   .timelineItem {
     grid-template-columns: 48px minmax(0, 1fr);
     gap: 0 14px;
+    width: 100%;
+    min-width: 0;
   }
 
   .stepMarker {
     width: 48px;
     height: 48px;
     border-radius: 15px;
+  }
+}
+
+@media (max-width: 380px) {
+  .guideIntro h2,
+  .processIntro h2,
+  .ctaPanel h2 {
+    font-size: clamp(28px, 9.4vw, 36px);
   }
 }
