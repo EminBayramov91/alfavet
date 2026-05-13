@@ -1,26 +1,26 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import type { CSSProperties, PointerEvent } from "react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppSettings } from "@/app/providers";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ContactCta } from "@/components/shared/ContactCta";
 import styles from "./GalleryPage.module.css";
 
-const imageSources = [
-  "/images/gallery/gallery-01-reception.jpg",
-  "/images/gallery/gallery-02-dog-care.jpg",
-  "/images/gallery/gallery-03-exam.jpg",
-  "/images/gallery/gallery-04-kitten-care.jpg",
-  "/images/gallery/gallery-05-kittens.jpg",
-  "/images/gallery/gallery-06-treatment.jpg",
-  "/images/gallery/gallery-07-clinic-room.jpg",
-  "/images/gallery/gallery-08-patient.jpg",
-  "/images/gallery/gallery-09-vet-portrait.jpg",
-  "/images/gallery/gallery-10-team.jpg",
+const galleryImages = [
+  { src: "/images/gallery/gallery-10-team.jpg", slideIndex: 9 },
+  { src: "/images/gallery/gallery-01-reception.jpg", slideIndex: 0 },
+  { src: "/images/gallery/gallery-02-dog-care.jpg", slideIndex: 1 },
+  { src: "/images/gallery/gallery-03-exam.jpg", slideIndex: 2 },
+  { src: "/images/gallery/gallery-04-kitten-care.jpg", slideIndex: 3 },
+  { src: "/images/gallery/gallery-05-kittens.jpg", slideIndex: 4 },
+  { src: "/images/gallery/gallery-06-treatment.jpg", slideIndex: 5 },
+  { src: "/images/gallery/gallery-07-clinic-room.jpg", slideIndex: 6 },
+  { src: "/images/gallery/gallery-08-patient.jpg", slideIndex: 7 },
+  { src: "/images/gallery/gallery-09-vet-portrait.jpg", slideIndex: 8 },
 ] as const;
 
 function getOffset(index: number, activeIndex: number, length: number) {
@@ -50,16 +50,18 @@ function getPositionClass(offset: number) {
 export function GalleryPage() {
   const { t } = useAppSettings();
   const dragDeltaRef = useRef(0);
+  const dragStartSlideIndexRef = useRef<number | null>(null);
   const slides = useMemo(
     () =>
-      imageSources.map((src, index) => ({
-        src,
-        title: t.galleryPage.slides[index]?.title ?? t.galleryPage.slideLabel,
-        description: t.galleryPage.slides[index]?.description ?? "",
+      galleryImages.map((image) => ({
+        src: image.src,
+        title: t.galleryPage.slides[image.slideIndex]?.title ?? t.galleryPage.slideLabel,
+        description: t.galleryPage.slides[image.slideIndex]?.description ?? "",
       })),
     [t],
   );
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [dragState, setDragState] = useState<{
     startX: number;
     deltaX: number;
@@ -83,13 +85,31 @@ export function GalleryPage() {
     .filter(Boolean)
     .join(" ");
 
-  const goToPrevious = () =>
-    setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
-  const goToNext = () =>
-    setActiveIndex((current) => (current + 1) % slides.length);
+  const goToPrevious = useCallback(
+    () =>
+      setActiveIndex((current) => (current - 1 + slides.length) % slides.length),
+    [slides.length],
+  );
+  const goToNext = useCallback(
+    () => setActiveIndex((current) => (current + 1) % slides.length),
+    [slides.length],
+  );
+  const openLightbox = () => setIsLightboxOpen(true);
+  const closeLightbox = useCallback(() => setIsLightboxOpen(false), []);
+  const getSlideIndexFromTarget = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) {
+      return null;
+    }
+
+    const slide = target.closest<HTMLElement>("[data-slide-index]");
+    const slideIndex = Number(slide?.dataset.slideIndex);
+
+    return Number.isInteger(slideIndex) ? slideIndex : null;
+  };
   const startDrag = (event: PointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
     dragDeltaRef.current = 0;
+    dragStartSlideIndexRef.current = getSlideIndexFromTarget(event.target);
     setDragState({
       startX: event.clientX,
       deltaX: 0,
@@ -119,10 +139,46 @@ export function GalleryPage() {
     if (Math.abs(movement) > 48) {
       if (movement > 0) goToPrevious();
       else goToNext();
+    } else if (Math.abs(movement) <= 8) {
+      const clickedIndex = dragStartSlideIndexRef.current;
+
+      if (clickedIndex === activeIndex) {
+        openLightbox();
+      } else if (clickedIndex !== null) {
+        setActiveIndex(clickedIndex);
+      }
     }
 
+    dragStartSlideIndexRef.current = null;
     setDragState(null);
   };
+  const cancelDrag = () => {
+    dragStartSlideIndexRef.current = null;
+    setDragState(null);
+  };
+
+  useEffect(() => {
+    if (!isLightboxOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeLightbox();
+      }
+
+      if (event.key === "ArrowLeft") {
+        goToPrevious();
+      }
+
+      if (event.key === "ArrowRight") {
+        goToNext();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [closeLightbox, goToNext, goToPrevious, isLightboxOpen]);
 
   return (
     <div className={styles.page}>
@@ -146,7 +202,7 @@ export function GalleryPage() {
           >
             <div
               className={styles.stage}
-              onPointerCancel={() => setDragState(null)}
+              onPointerCancel={cancelDrag}
               onPointerDown={startDrag}
               onPointerMove={moveDrag}
               onPointerUp={endDrag}
@@ -161,11 +217,8 @@ export function GalleryPage() {
                     aria-label={`${t.galleryPage.slideLabel} ${index + 1}: ${slide.title}`}
                     aria-current={index === activeIndex ? "true" : undefined}
                     className={[styles.slideCard, positionClass].join(" ")}
+                    data-slide-index={index}
                     key={slide.src}
-                    onClick={() => {
-                      if (Math.abs(dragDeltaRef.current) > 8) return;
-                      setActiveIndex(index);
-                    }}
                     type="button"
                   >
                     <Image
@@ -227,6 +280,38 @@ export function GalleryPage() {
         </section>
         <ContactCta />
       </main>
+      {isLightboxOpen ? (
+        <div
+          className={styles.lightbox}
+          onClick={closeLightbox}
+          role="presentation"
+        >
+          <div
+            aria-label={activeSlide.title}
+            aria-modal="true"
+            className={styles.lightboxDialog}
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <button
+              aria-label={t.nav.close}
+              className={styles.lightboxClose}
+              onClick={closeLightbox}
+              type="button"
+            >
+              <X aria-hidden="true" />
+            </button>
+            <Image
+              alt={activeSlide.title}
+              className={styles.lightboxImage}
+              fill
+              quality={100}
+              sizes="100vw"
+              src={activeSlide.src}
+            />
+          </div>
+        </div>
+      ) : null}
       <SiteFooter />
     </div>
   );

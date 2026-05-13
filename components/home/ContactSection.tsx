@@ -85,7 +85,7 @@ export function ContactSection() {
               referrerPolicy="no-referrer-when-downgrade"
               scrolling="no"
               src={mapUrl}
-              title="Alfavet map"
+              title={t.contacts.map}
             />
             <a
               aria-label={t.contacts.map}

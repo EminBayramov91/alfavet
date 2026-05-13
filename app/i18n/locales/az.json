@@ -1,0 +1,284 @@
+{
+  "nav": {
+    "about": "Haqqımızda",
+    "services": "Xidmətlər",
+    "gallery": "Qalereya",
+    "blog": "Bloq",
+    "contacts": "Əlaqə",
+    "book": "Qəbula yazıl",
+    "menu": "Menyu",
+    "close": "Bağla",
+    "theme": "Mövzunu dəyiş",
+    "language": "Dil seçimi"
+  },
+  "hero": {
+    "eyebrow": "Alfavet baytarlıq klinikası",
+    "title": "Ev heyvanınız üçün ən yaxşı seçim",
+    "lead": "Bakıdakı Alfavet komandası müayinə, diaqnostika, vaksinasiya və sənədləşməni bir yerdə, əvvəlcədən yazılışla təşkil edir.",
+    "primary": "Qəbula yazıl",
+    "secondary": "Xidmətlərə bax"
+  },
+  "aboutPage": {
+    "heroEyebrow": "Klinika haqqında",
+    "heroTitle": "Bakıda ev heyvanları üçün baytarlıq xidməti",
+    "heroLead": "Alfavet peşəkar tibbi yardım, diaqnostika və sənədləşməni bir klinikada birləşdirir ki, sahib müalicə üçün müxtəlif ünvanlara getməsin.",
+    "primary": "Qəbula yazıl",
+    "secondary": "Xidmətlərə bax",
+    "stats": [
+      {
+        "value": "2015",
+        "label": "ildən fəaliyyət göstərir"
+      },
+      {
+        "value": "24h",
+        "label": "əksər analiz nəticələri üçün"
+      },
+      {
+        "value": "1",
+        "label": "ünvanda müayinə, diaqnostika və müalicə"
+      }
+    ],
+    "storyEyebrow": "Fəlsəfə",
+    "storyTitle": "Məqsəd sadədir: tibbi dəqiqlik və etibar hissi",
+    "storyText": "Klinika heyvanlara peşəkar tibbi yardımı qayğı və etibar atmosferində göstərmək üçün yaradılıb. Komanda yalnız müalicə etmir, həm də sahibə vəziyyəti və növbəti addımları sakit şəkildə izah edir.",
+    "storyBlocks": [
+      {
+        "eyebrow": "Fəlsəfə",
+        "title": "Məqsəd sadədir: tibbi dəqiqlik və etibar hissi",
+        "description": "Klinika heyvanlara peşəkar tibbi yardımı qayğı və etibar atmosferində göstərmək üçün yaradılıb. Komanda yalnız müalicə etmir, həm də sahibə vəziyyəti və növbəti addımları sakit şəkildə izah edir."
+      },
+      {
+        "eyebrow": "Qəbul",
+        "title": "Ayrı kabinetlər və sakit müayinə",
+        "description": "Pasiyent digər heyvanlarla təmas etmədən müayinə olunur. Bu, həm heyvanın stressini azaldır, həm də həkimə sahib ilə daha rahat danışmağa imkan verir."
+      },
+      {
+        "eyebrow": "Diaqnostika",
+        "title": "Analiz, rentgen və USM eyni klinikadadır",
+        "description": "Laboratoriya, rentgen kabineti və ultrasəs müayinəsi müalicə qərarını daha sürətli və dəqiq qurmağa kömək edir."
+      }
+    ],
+    "principles": [
+      {
+        "title": "Ayrı kabinetlərdə qəbul",
+        "description": "Pasiyent digər heyvanlarla təmas etmədən müayinə olunur və həkim sahib ilə rahat danışa bilir."
+      },
+      {
+        "title": "Diaqnostika bir yerdə",
+        "description": "Laboratoriya, rentgen və USM imkanları müalicə qərarını daha sürətli və dəqiq qurmağa kömək edir."
+      },
+      {
+        "title": "Çətin hallarda səbr",
+        "description": "Komanda mürəkkəb klinik hallarda da pasiyentin sağlamlığı üçün ardıcıl çalışır."
+      }
+    ],
+    "processEyebrow": "Klinikanın imkanları",
+    "processTitle": "Müayinə, analiz və müalicə üçün əsas imkanlar eyni məkandadır",
+    "process": [
+      {
+        "title": "Laboratoriya",
+        "description": "Əksər analizlərin cavabı qısa müddətdə hazır olur və həkim növbəti addımı izah edir."
+      },
+      {
+        "title": "Rentgen və USM",
+        "description": "Daxili orqanların və sümük strukturlarının yoxlanması üçün diaqnostik imkanlar var."
+      },
+      {
+        "title": "Terapiya və cərrahiyyə",
+        "description": "Klinikada terapiya, əməliyyatlar, stomatologiya, vaksinasiya və pasport sənədləri aparılır."
+      }
+    ],
+    "teamEyebrow": "Komanda",
+    "teamTitle": "Heyvanlara sevgi və məsuliyyətlə yanaşan həkimlər",
+    "teamLead": "Klinikada qəbul kvalifikasiyalı baytar həkimlər tərəfindən aparılır.",
+    "teamMembers": [
+      {
+        "name": "Rüfət Abasov",
+        "role": "Baytar həkim"
+      },
+      {
+        "name": "Alla Abasova",
+        "role": "Baytar həkim"
+      },
+      {
+        "name": "Orxan Hacılı",
+        "role": "Baytar həkim"
+      }
+    ],
+    "ctaTitle": "Ev heyvanınız üçün növbəti addımı planlayaq",
+    "ctaText": "Qəbul əvvəlcədən yazılışla aparılır ki, komanda sizə və pasiyentə sakit vaxt ayıra bilsin."
+  },
+  "services": {
+    "eyebrow": "Xidmətlər",
+    "title": "Gündəlik baxımdan diaqnostikaya qədər",
+    "description": "Əsas istiqamətlər ilk ekranda aydın görünür, daha detallı səhifələri isə sonrakı mərhələdə ayrıca açacağıq.",
+    "items": [
+      {
+        "title": "Klinik müayinə",
+        "description": "Ümumi vəziyyətin qiymətləndirilməsi və fərdi müalicə planı."
+      },
+      {
+        "title": "Terapiya",
+        "description": "Kəskin və xroniki hallarda müşahidə və müalicə."
+      },
+      {
+        "title": "Vaksinasiya",
+        "description": "Yaşa və sağlamlıq vəziyyətinə uyğun peyvənd cədvəli."
+      },
+      {
+        "title": "Analizlərin götürülməsi",
+        "description": "Laborator yoxlamalar üçün nümunələrin düzgün götürülməsi."
+      },
+      {
+        "title": "Cərrahiyyə",
+        "description": "Planlı əməliyyatlar və əməliyyat sonrası nəzarət."
+      },
+      {
+        "title": "Stomatologiya",
+        "description": "Ağız boşluğu, diş və damaq problemlərinin müayinəsi."
+      },
+      {
+        "title": "Çipləmə",
+        "description": "Ev heyvanlarının identifikasiyası üçün mikroçip tətbiqi."
+      },
+      {
+        "title": "Rentgenologiya",
+        "description": "Sümük və daxili strukturların görüntülənməsi."
+      },
+      {
+        "title": "Laborator diaqnostika",
+        "description": "Analiz nəticələrinə əsaslanan daha dəqiq qərarlar."
+      },
+      {
+        "title": "Instrumental diaqnostika",
+        "description": "Müasir cihazlarla əlavə müayinə imkanları."
+      },
+      {
+        "title": "Ultrasəs müayinəsi",
+        "description": "Qarın boşluğu və yumşaq toxumaların USM yoxlaması."
+      },
+      {
+        "title": "Baytarlıq pasportu",
+        "description": "Səfər və qeydiyyat üçün lazımi sənədlərin hazırlanması."
+      }
+    ]
+  },
+  "approach": {
+    "eyebrow": "Yanaşma",
+    "title": "Klinika hissi daha sakit və etibarlı olmalıdır",
+    "description": "Yeni ana səhifə Alfavet-i daha zərif, oxunaqlı və etibarlı göstərir: az mətn, güclü vizual ritm, aydın çağırışlar.",
+    "items": [
+      {
+        "title": "Sakit qəbul",
+        "description": "Yazılışla qəbul növbəni azaldır və heyvan üçün stressi yüngülləşdirir."
+      },
+      {
+        "title": "Aydın diaqnostika",
+        "description": "Xidmətlər kartlarda qruplaşdırılıb ki, sahib nə axtardığını tez tapsın."
+      },
+      {
+        "title": "Davamlı əlaqə",
+        "description": "Telefon, WhatsApp və xəritə eyni blokda toplanıb."
+      }
+    ]
+  },
+  "partners": {
+    "eyebrow": "Tərəfdaş brendlər",
+    "title": "Klinikada tanınan və etibarlı məhsullar"
+  },
+  "galleryPage": {
+    "eyebrow": "Qalereya",
+    "title": "Klinikadan real anlar",
+    "lead": "Alfavet klinikasından fotolar.",
+    "previous": "Əvvəlki şəkil",
+    "next": "Növbəti şəkil",
+    "slideLabel": "Şəkil",
+    "slides": [
+      {
+        "title": "Qəbul məkanı",
+        "description": "Klinikanın gündəlik iş atmosferi."
+      },
+      {
+        "title": "Diqqətli nəzarət",
+        "description": "Pasiyentlər qəbul zamanı həkim nəzarətində olur."
+      },
+      {
+        "title": "Müayinə anı",
+        "description": "Həkim, sahib və pasiyent arasında sakit ünsiyyət."
+      },
+      {
+        "title": "Kiçik pasiyentlər",
+        "description": "Pişik balaları üçün yumşaq və diqqətli yanaşma."
+      },
+      {
+        "title": "İlk baxış",
+        "description": "Müayinə zamanı heyvanın rahatlığı əsasdır."
+      },
+      {
+        "title": "Müalicə prosesi",
+        "description": "Təyin olunan prosedurlar nəzarətlə aparılır."
+      },
+      {
+        "title": "Klinika otaqları",
+        "description": "Müayinə və diaqnostika üçün hazırlanmış məkan."
+      },
+      {
+        "title": "Səbirli baxım",
+        "description": "Hər pasiyentə fərdi yanaşma seçilir."
+      },
+      {
+        "title": "Komanda işi",
+        "description": "Həkimlərin təcrübəsi klinikanın əsas gücüdür."
+      },
+      {
+        "title": "Alfavet komandası",
+        "description": "Heyvanlara qayğı ilə yanaşan peşəkar komanda."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Tez-tez verilən suallar",
+    "items": [
+      {
+        "question": "Qəbula əvvəlcədən yazılmaq lazımdır?",
+        "answer": "Bəli, qəbul əvvəlcədən yazılışla aparılır. Beləliklə komanda hər pasiyentə daha sakit və diqqətli vaxt ayıra bilir."
+      },
+      {
+        "question": "İlk vaksini nə vaxt etdirmək olar?",
+        "answer": "Adətən ilk vaksin 6-8 həftəlik yaşdan planlanır, amma dəqiq qərar müayinə və heyvanın vəziyyətindən sonra verilir."
+      },
+      {
+        "question": "Baytarlıq pasportu almaq mümkündür?",
+        "answer": "Bəli, klinikada baytarlıq pasportu və əlaqəli sənədlərin hazırlanması mümkündür."
+      },
+      {
+        "question": "Sterilizasiya və kastrasiya edirsiniz?",
+        "answer": "Bəli. Əməliyyatdan əvvəl həkim müayinə və lazım olduqda əlavə analizlər təyin edir."
+      },
+      {
+        "question": "Klinika hansı heyvanları qəbul edir?",
+        "answer": "Əsasən pişik və itlər qəbul edilir. Ekzotik və digər kiçik heyvanlar üçün əvvəlcədən zənglə dəqiqləşdirmək yaxşıdır."
+      }
+    ]
+  },
+  "contacts": {
+    "eyebrow": "Əlaqə",
+    "title": "Qəbula yazılmaq və ünvanı tapmaq",
+    "phone": "Telefon",
+    "email": "Email",
+    "address": "Ünvan",
+    "hours": "İş prinsipi",
+    "hoursText": "Qəbul əvvəlcədən yazılışla aparılır",
+    "addressText": "52, Magsud Alizade, Narimanov rayonu, Bakı, Azərbaycan",
+    "about": "Klinika haqqında",
+    "whatsapp": "WhatsApp",
+    "map": "Klinikanı xəritədə aç",
+    "resetMap": "Ünvana qayıt"
+  },
+  "footer": {
+    "clinic": "Klinika",
+    "services": "Xidmətlər",
+    "contact": "Əlaqə"
+  }
+}

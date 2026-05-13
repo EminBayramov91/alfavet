@@ -1,31 +1,10 @@
 "use client";
 
 import { CalendarCheck, MessageCircle } from "lucide-react";
-import type { Locale } from "@/app/i18n";
+import defaultCopy from "@/app/i18n/pages/contact-cta.json";
 import { useAppSettings } from "@/app/providers";
 import { Button } from "@/components/ui/Button";
 import styles from "./ContactCta.module.css";
-
-const defaultCopy: Record<
-  Locale,
-  {
-    title: string;
-    text: string;
-  }
-> = {
-  az: {
-    title: "Haradan başlamağın daha doğru olduğunu dəqiqləşdirək",
-    text: "Simptomları və ya lazım olan xidməti yazın, komanda uyğun qəbul vaxtı təklif edəcək.",
-  },
-  en: {
-    title: "Let's clarify where to start",
-    text: "Describe the symptoms or the service you need, and the team will suggest a suitable visit time.",
-  },
-  ru: {
-    title: "Уточним, с чего лучше начать",
-    text: "Опишите симптомы или нужную услугу, и команда предложит подходящее время приёма.",
-  },
-};
 
 type ContactCtaProps = {
   eyebrow?: string;

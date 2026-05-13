@@ -1,7 +1,9 @@
 "use client";
 
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import Image from "next/image";
 import {
+  CheckCircle2,
   Clock3,
   CalendarCheck,
   Mail,
@@ -11,7 +13,7 @@ import {
   Phone,
   Send,
 } from "lucide-react";
-import type { Locale } from "@/app/i18n";
+import contactsPageCopy from "@/app/i18n/pages/contacts.json";
 import { useAppSettings } from "@/app/providers";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -25,168 +27,95 @@ const mapUrl =
   "https://www.openstreetmap.org/export/embed.html?bbox=49.8379%2C40.4007%2C49.8431%2C40.4042&layer=mapnik&marker=40.4024885%2C49.8405175";
 const mapsLink =
   "https://www.google.com/maps/search/?api=1&query=40.40248850947148,49.840517541880175";
+const minimumNameLength = 3;
+const minimumPhoneLength = 7;
 
-type ContactsPageCopy = {
-  heroLead: string;
-  call: string;
-  mapLead: string;
-  mapHint: string;
-  quickTitle: string;
-  quickLead: string;
-  formEyebrow: string;
-  formTitle: string;
-  formLead: string;
+type ContactFormState = {
   fullName: string;
-  fullNamePlaceholder: string;
-  phoneNumber: string;
-  phonePlaceholder: string;
-  mail: string;
-  mailPlaceholder: string;
+  phone: string;
+  email: string;
   message: string;
-  messagePlaceholder: string;
-  submit: string;
-  formNote: string;
-  stepsEyebrow: string;
-  stepsTitle: string;
-  stepsLead: string;
-  steps: Array<{
-    title: string;
-    description: string;
-  }>;
 };
 
-const pageCopy: Record<Locale, ContactsPageCopy> = {
-  az: {
-    heroLead:
-      "Qəbulu əvvəlcədən planlaşdırmaq daha rahatdır: zəng edin, WhatsApp-da yazın və ya xəritəni açıb klinikaya gəlmə yolunu yoxlayın.",
-    call: "Zəng et",
-    mapLead:
-      "Klinika Nərimanov rayonunda, Maqsud Əlizadə küçəsində yerləşir. Xəritəyə toxunanda ünvan Google Maps-də açılacaq.",
-    mapHint: "Xəritəni açmaq üçün üzərinə klikləyin",
-    quickTitle: "Əlaqə məlumatları",
-    quickLead: "Komanda qəbul vaxtını dəqiqləşdirmək üçün sizinlə əlaqə saxlayacaq.",
-    formEyebrow: "Sorğu forması",
-    formTitle: "Qəbul üçün məlumat göndərin",
-    formLead:
-      "Formanı doldurun, biz e-mail göndərilməsini və avtomatik cavabı növbəti mərhələdə qoşacağıq.",
-    fullName: "Ad və soyad",
-    fullNamePlaceholder: "Adınızı yazın",
-    phoneNumber: "Telefon nömrəsi",
-    phonePlaceholder: "+994",
-    mail: "E-mail",
-    mailPlaceholder: "name@example.com",
-    message: "Mətn (istəyə bağlı)",
-    messagePlaceholder: "Qısa olaraq nə üçün müraciət etdiyinizi yazın",
-    submit: "Göndər",
-    formNote: "Göndərmə funksiyası növbəti mərhələdə qoşulacaq.",
-    stepsEyebrow: "Qəbul formatı",
-    stepsTitle: "Klinikaya gəlməzdən əvvəl",
-    stepsLead:
-      "Qəbul yazılışla aparılır ki, həkim pasiyentə və sahibinə sakit vaxt ayıra bilsin.",
-    steps: [
-      {
-        title: "Əvvəlcə əlaqə saxlayın",
-        description: "Formanı doldurun, zəng edin və ya WhatsApp vasitəsilə yazın.",
-      },
-      {
-        title: "Vaxtı təsdiqləyin",
-        description: "Komanda uyğun qəbul saatını və lazım olan hazırlığı deyəcək.",
-      },
-      {
-        title: "Ünvanı xəritədə açın",
-        description: "Xəritəyə klikləyərək klinikanın yerini Google Maps-də görün.",
-      },
-    ],
-  },
-  en: {
-    heroLead:
-      "Plan the visit before you arrive: call the clinic, write on WhatsApp or open the route to Alfavet in maps.",
-    call: "Call clinic",
-    mapLead:
-      "The clinic is located on Magsud Alizade Street in Narimanov district. Tap the map to open the address in Google Maps.",
-    mapHint: "Click the map to open directions",
-    quickTitle: "Contact details",
-    quickLead: "The team will get back to you to clarify the visit time.",
-    formEyebrow: "Request form",
-    formTitle: "Send visit details",
-    formLead:
-      "Fill out the form. Email delivery and the automatic client reply will be connected in the next step.",
-    fullName: "Full Name",
-    fullNamePlaceholder: "Enter your name",
-    phoneNumber: "Phone number",
-    phonePlaceholder: "+994",
-    mail: "Mail",
-    mailPlaceholder: "name@example.com",
-    message: "Text (optional)",
-    messagePlaceholder: "Briefly describe what you need",
-    submit: "Send request",
-    formNote: "Submission will be connected in the next stage.",
-    stepsEyebrow: "Visit format",
-    stepsTitle: "Before you come in",
-    stepsLead:
-      "Visits are handled by appointment so the doctor can give the patient and owner focused time.",
-    steps: [
-      {
-        title: "Contact the clinic",
-        description: "Fill out the form, call or send a short message on WhatsApp.",
-      },
-      {
-        title: "Confirm the time",
-        description: "The team will suggest a visit time and preparation if needed.",
-      },
-      {
-        title: "Open the address",
-        description: "Click the map to view the clinic location in Google Maps.",
-      },
-    ],
-  },
-  ru: {
-    heroLead:
-      "Запланируйте визит заранее: позвоните в клинику, напишите в WhatsApp или откройте маршрут до Alfavet на карте.",
-    call: "Позвонить",
-    mapLead:
-      "Клиника находится на улице Магсуда Ализаде в Наримановском районе. Нажмите на карту, чтобы открыть адрес в Google Maps.",
-    mapHint: "Нажмите на карту, чтобы открыть маршрут",
-    quickTitle: "Контактные данные",
-    quickLead: "Команда свяжется с вами, чтобы уточнить удобное время приема.",
-    formEyebrow: "Форма заявки",
-    formTitle: "Отправьте данные для записи",
-    formLead:
-      "Заполните форму. Отправку на e-mail клиники и автоответ пользователю подключим следующим этапом.",
-    fullName: "Full Name",
-    fullNamePlaceholder: "Введите ваше имя",
-    phoneNumber: "Phone number",
-    phonePlaceholder: "+994",
-    mail: "Mail",
-    mailPlaceholder: "name@example.com",
-    message: "Text (optional)",
-    messagePlaceholder: "Коротко опишите, что нужно",
-    submit: "Отправить заявку",
-    formNote: "Отправка формы будет подключена на следующем этапе.",
-    stepsEyebrow: "Формат приема",
-    stepsTitle: "Перед визитом в клинику",
-    stepsLead:
-      "Прием ведется по записи, чтобы врач мог спокойно уделить время пациенту и владельцу.",
-    steps: [
-      {
-        title: "Свяжитесь с клиникой",
-        description: "Заполните форму, позвоните или отправьте короткое сообщение в WhatsApp.",
-      },
-      {
-        title: "Подтвердите время",
-        description: "Команда предложит время приема и подготовку, если она нужна.",
-      },
-      {
-        title: "Откройте адрес",
-        description: "Нажмите на карту, чтобы посмотреть клинику в Google Maps.",
-      },
-    ],
-  },
+type ContactFormErrors = Partial<Record<keyof ContactFormState, string>>;
+
+const initialContactFormState: ContactFormState = {
+  fullName: "",
+  phone: "",
+  email: "",
+  message: "",
 };
+
+const pageCopy = contactsPageCopy.page;
+const formMessages = contactsPageCopy.form;
 
 export function ContactsPage() {
   const { locale, t } = useAppSettings();
   const copy = pageCopy[locale];
+  const messages = formMessages[locale];
+  const [formValues, setFormValues] = useState<ContactFormState>(
+    initialContactFormState,
+  );
+  const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
+  const validateForm = () => {
+    const errors: ContactFormErrors = {};
+    const trimmedName = formValues.fullName.trim();
+    const trimmedEmail = formValues.email.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (trimmedName.length < minimumNameLength) {
+      errors.fullName = messages.validation.fullName;
+    }
+
+    if (
+      formValues.phone.length < minimumPhoneLength ||
+      !/^\+?\d+$/.test(formValues.phone)
+    ) {
+      errors.phone = messages.validation.phone;
+    }
+
+    if (!emailPattern.test(trimmedEmail)) {
+      errors.email = messages.validation.email;
+    }
+
+    return errors;
+  };
+
+  const handleFieldChange =
+    (field: keyof ContactFormState) =>
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = field === "phone"
+        ? event.target.value
+            .replace(/[^\d+]/g, "")
+            .replace(/(?!^)\+/g, "")
+        : event.target.value;
+
+      setFormValues((current) => ({ ...current, [field]: value }));
+
+      if (formErrors[field]) {
+        setFormErrors((current) => {
+          const next = { ...current };
+          delete next[field];
+          return next;
+        });
+      }
+    };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const errors = validateForm();
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
+    setFormValues(initialContactFormState);
+    setIsSuccessOpen(true);
+  };
 
   return (
     <div className={styles.page}>
@@ -194,7 +123,7 @@ export function ContactsPage() {
       <main>
         <section className={styles.hero}>
           <Image
-            alt="Alfavet clinic patient"
+            alt={t.contacts.title}
             className={styles.heroImage}
             fill
             priority
@@ -227,61 +156,108 @@ export function ContactsPage() {
         </section>
 
         <section className={styles.requestSection} id="contact-form">
-          <div className={styles.requestGrid}>
-            <form
-              className={styles.formPanel}
-              onSubmit={(event) => event.preventDefault()}
-            >
-              <p className={styles.eyebrow}>{copy.formEyebrow}</p>
-              <h2>{copy.formTitle}</h2>
-              <p>{copy.formLead}</p>
+          <div className={styles.requestIntro}>
+            <SectionHeading
+              description={copy.formLead}
+              eyebrow={copy.formEyebrow}
+              title={copy.formTitle}
+            />
+          </div>
 
+          <div className={styles.requestGrid}>
+            <form className={styles.formPanel} noValidate onSubmit={handleSubmit}>
               <div className={styles.fieldGrid}>
-                <label className={styles.field}>
+                <label
+                  className={`${styles.field} ${
+                    formErrors.fullName ? styles.fieldError : ""
+                  }`}
+                >
                   <span>{copy.fullName}</span>
                   <input
+                    aria-describedby={
+                      formErrors.fullName ? "fullName-error" : undefined
+                    }
+                    aria-invalid={Boolean(formErrors.fullName)}
                     autoComplete="name"
+                    minLength={minimumNameLength}
                     name="fullName"
+                    onChange={handleFieldChange("fullName")}
                     placeholder={copy.fullNamePlaceholder}
                     required
                     type="text"
+                    value={formValues.fullName}
                   />
+                  {formErrors.fullName ? (
+                    <small id="fullName-error">{formErrors.fullName}</small>
+                  ) : null}
                 </label>
 
-                <label className={styles.field}>
+                <label
+                  className={`${styles.field} ${
+                    formErrors.phone ? styles.fieldError : ""
+                  }`}
+                >
                   <span>{copy.phoneNumber}</span>
                   <input
+                    aria-describedby={formErrors.phone ? "phone-error" : undefined}
+                    aria-invalid={Boolean(formErrors.phone)}
                     autoComplete="tel"
+                    inputMode="tel"
                     name="phone"
+                    onChange={handleFieldChange("phone")}
+                    pattern="\+?[0-9]*"
                     placeholder={copy.phonePlaceholder}
                     required
                     type="tel"
+                    value={formValues.phone}
                   />
+                  {formErrors.phone ? (
+                    <small id="phone-error">{formErrors.phone}</small>
+                  ) : null}
                 </label>
 
-                <label className={styles.field}>
+                <label
+                  className={`${styles.field} ${
+                    formErrors.email ? styles.fieldError : ""
+                  }`}
+                >
                   <span>{copy.mail}</span>
                   <input
+                    aria-describedby={formErrors.email ? "email-error" : undefined}
+                    aria-invalid={Boolean(formErrors.email)}
                     autoComplete="email"
+                    inputMode="email"
                     name="email"
+                    onChange={handleFieldChange("email")}
                     placeholder={copy.mailPlaceholder}
                     required
-                    type="email"
+                    type="text"
+                    value={formValues.email}
                   />
+                  {formErrors.email ? (
+                    <small id="email-error">{formErrors.email}</small>
+                  ) : null}
                 </label>
 
                 <label className={styles.field}>
                   <span>{copy.message}</span>
                   <textarea
                     name="message"
+                    onChange={handleFieldChange("message")}
                     placeholder={copy.messagePlaceholder}
                     rows={5}
+                    value={formValues.message}
                   />
                 </label>
               </div>
 
               <div className={styles.formFooter}>
-                <Button icon={<Send />} type="submit">
+                <Button
+                  className={styles.submitButton}
+                  icon={<Send />}
+                  size="lg"
+                  type="submit"
+                >
                   {copy.submit}
                 </Button>
                 <span>{copy.formNote}</span>
@@ -360,7 +336,7 @@ export function ContactsPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 scrolling="no"
                 src={mapUrl}
-                title="Alfavet map"
+                title={t.contacts.map}
               />
               <a
                 aria-label={t.contacts.map}
@@ -403,6 +379,30 @@ export function ContactsPage() {
           </div>
         </section>
       </main>
+      {isSuccessOpen ? (
+        <div
+          className={styles.successOverlay}
+          onClick={() => setIsSuccessOpen(false)}
+          role="presentation"
+        >
+          <div
+            aria-labelledby="contact-success-title"
+            aria-modal="true"
+            className={styles.successDialog}
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className={styles.successIcon}>
+              <CheckCircle2 aria-hidden="true" />
+            </div>
+            <h2 id="contact-success-title">{messages.success.title}</h2>
+            <p>{messages.success.text}</p>
+            <Button onClick={() => setIsSuccessOpen(false)}>
+              {messages.success.close}
+            </Button>
+          </div>
+        </div>
+      ) : null}
       <SiteFooter />
     </div>
   );

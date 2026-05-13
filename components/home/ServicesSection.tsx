@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   BadgePlus,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAppSettings } from "@/app/providers";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { serviceIds } from "@/lib/serviceCatalog";
 import styles from "./ServicesSection.module.css";
 
 const serviceIcons: LucideIcon[] = [
@@ -47,15 +49,21 @@ export function ServicesSection() {
       <div className={styles.servicesGrid}>
         {t.services.items.map((service, index) => {
           const Icon = serviceIcons[index] ?? Stethoscope;
+          const serviceId = serviceIds[index];
 
           return (
-            <article className={styles.serviceCard} key={service.title}>
+            <Link
+              aria-label={service.title}
+              className={styles.serviceCard}
+              href={`/services?service=${serviceId}#service-guide`}
+              key={service.title}
+            >
               <div className={styles.iconWrap}>
                 <Icon aria-hidden="true" />
               </div>
               <h3 className={styles.serviceTitle}>{service.title}</h3>
               <p className={styles.serviceDescription}>{service.description}</p>
-            </article>
+            </Link>
           );
         })}
       </div>

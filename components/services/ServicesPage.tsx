@@ -1,371 +1,103 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import {
+  BadgePlus,
   CalendarCheck,
   ClipboardCheck,
   FileText,
+  FlaskConical,
   HeartPulse,
   Microscope,
   MessageCircle,
+  Radiation,
+  ScanHeart,
   ScanSearch,
   ShieldCheck,
+  Scissors,
+  SmilePlus,
   Stethoscope,
   Syringe,
 } from "lucide-react";
-import type { Locale } from "@/app/i18n";
+import servicesPageCopy from "@/app/i18n/pages/services.json";
 import { useAppSettings } from "@/app/providers";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ContactCta } from "@/components/shared/ContactCta";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+  getServiceGroupIndex,
+  getServiceIndex,
+  getServicesForGroup,
+  serviceIds,
+  type ServiceId,
+} from "@/lib/serviceCatalog";
 import styles from "./ServicesPage.module.css";
 
 const pathIcons: LucideIcon[] = [Stethoscope, Syringe, HeartPulse, ScanSearch];
 const groupIcons: LucideIcon[] = [Stethoscope, Microscope, ShieldCheck, FileText];
 const stepIcons: LucideIcon[] = [MessageCircle, Stethoscope, ClipboardCheck];
+const serviceIcons: LucideIcon[] = [
+  Stethoscope,
+  HeartPulse,
+  Syringe,
+  FlaskConical,
+  Scissors,
+  SmilePlus,
+  BadgePlus,
+  Radiation,
+  Microscope,
+  ScanSearch,
+  ScanHeart,
+  FileText,
+];
 
-type CarePath = {
-  title: string;
-  description: string;
-  highlight: string;
+type ServicesPageProps = {
+  initialService?: string | null;
 };
 
-type ServiceGroup = {
-  title: string;
-  description: string;
-  notes: string[];
-};
+const pageCopy = servicesPageCopy;
 
-type ServicesPageCopy = {
-  heroLead: string;
-  pathsEyebrow: string;
-  pathsTitle: string;
-  pathsLead: string;
-  paths: CarePath[];
-  guideEyebrow: string;
-  guideTitle: string;
-  groups: ServiceGroup[];
-  processEyebrow: string;
-  processTitle: string;
-  processLead: string;
-  ctaTitle: string;
-  ctaLead: string;
-  steps: Array<{
-    title: string;
-    description: string;
-  }>;
-};
-
-const pageCopy: Record<Locale, ServicesPageCopy> = {
-  az: {
-    heroLead:
-      "Müayinə, diaqnostika, vaksinasiya və sənədləşmə bir klinikada toplanıb ki, sahib növbəti addımı tez və aydın görə bilsin.",
-    pathsEyebrow: "Necə başlamaq olar",
-    pathsTitle: "Xidməti tibbi terminlə yox, vəziyyətlə seçin",
-    pathsLead:
-      "Sahib həmişə hansı xidmətin lazım olduğunu bilmir. Bu bloklar ilk addımı daha aydın göstərir.",
-    paths: [
-      {
-        title: "İlk qəbul və yoxlama",
-        description:
-          "Həkim əvvəl ümumi vəziyyəti qiymətləndirir, sonra müalicə və ya profilaktika planını izah edir.",
-        highlight: "Klinik müayinə və terapiya",
-      },
-      {
-        title: "Vaksinasiya və sənədlər",
-        description:
-          "Peyvənd cədvəli, mikroçip və baytarlıq pasportu eyni qəbulda planlaşdırıla bilər.",
-        highlight: "Vaksinasiya, çipləmə, pasport",
-      },
-      {
-        title: "Simptom və davranış dəyişikliyi",
-        description:
-          "İştaha, aktivlik, dəri, həzm və ya ağrı ilə bağlı narahatlıq varsa, qəbul müayinə ilə başlayır.",
-        highlight: "Terapiya və ilkin diaqnostika",
-      },
-      {
-        title: "Analiz və görüntüləmə",
-        description:
-          "Daha dəqiq qərar üçün laborator analiz, rentgen və USM imkanları istifadə olunur.",
-        highlight: "Laboratoriya, rentgen, USM",
-      },
-    ],
-    guideEyebrow: "Xidmət bələdçisi",
-    guideTitle: "Alfavet bir qəbulda nələri həll edə bilər",
-    groups: [
-      {
-        title: "Gündəlik baxım",
-        description:
-          "Planlı yoxlama, peyvənd və profilaktika üçün sakit başlanğıc nöqtəsi.",
-        notes: [
-          "Ümumi vəziyyət, qidalanma, aktivlik və sahibin müşahidələri birlikdə qiymətləndirilir.",
-          "Peyvənd tarixi, pasport qeydləri və profilaktik addımlar bir qəbulda dəqiqləşdirilir.",
-          "Əlavə yoxlama lazım olarsa, həkim növbəti diaqnostik addımı izah edir.",
-        ],
-      },
-      {
-        title: "Diaqnostika",
-        description:
-          "Analizlər və görüntüləmə qərarı təxminə yox, faktlara bağlamağa kömək edir.",
-        notes: [
-          "Laborator analizlər, rentgen və USM müalicə qərarını daha dəqiq qurmağa kömək edir.",
-          "Nəticələr sahibə sadə dildə izah olunur ki, növbəti addım aydın olsun.",
-          "Diaqnostika müayinə ilə birlikdə planlaşdırılır, ayrıca qarışıq proses kimi hiss olunmur.",
-        ],
-      },
-      {
-        title: "Müalicə və prosedurlar",
-        description:
-          "Terapiya, stomatologiya və planlı əməliyyatlar nəzarətlə aparılır.",
-        notes: [
-          "Müalicə planı heyvanın vəziyyətinə, yaşına və analiz nəticələrinə görə seçilir.",
-          "Planlı prosedurlardan əvvəl hazırlıq, sonra isə evdə qulluq qaydası izah edilir.",
-          "Təkrar baxış və müşahidə addımları əvvəlcədən sahibə bildirilir.",
-        ],
-      },
-      {
-        title: "Sənədlər və qeydiyyat",
-        description:
-          "Səyahət, peyvənd tarixi və identifikasiya üçün lazımi qeydlər bir yerdə aparılır.",
-        notes: [
-          "Baytarlıq pasportu, vaksin qeydləri və mikroçip məlumatları ardıcıllıqla yoxlanılır.",
-          "Səyahət və qeydiyyat üçün lazım ola biləcək sənədlər əvvəlcədən planlaşdırılır.",
-          "Sahib hansı sənədin nə üçün lazım olduğunu qəbul zamanı anlayır.",
-        ],
-      },
-    ],
-    processEyebrow: "Qəbul prosesi",
-    processTitle: "Qəbul qısa, aydın və ardıcıl gedir",
-    processLead:
-      "Komanda əvvəl vəziyyəti anlayır, sonra müayinə, diaqnostika və növbəti addımı planlayır.",
-    ctaTitle: "Hansı xidmətdən başlamağı birlikdə dəqiqləşdirək",
-    ctaLead:
-      "Simptomları və ya istədiyiniz xidməti yazın, komanda uyğun qəbul vaxtı təklif edəcək.",
-    steps: [
-      {
-        title: "Müraciət",
-        description: "Telefon, WhatsApp və ya forma vasitəsilə qısa məlumat göndərin.",
-      },
-      {
-        title: "Müayinə",
-        description: "Həkim pasiyenti yoxlayır və lazım olan analizləri izah edir.",
-      },
-      {
-        title: "Plan",
-        description: "Müalicə, təkrar baxış və sənədlər üzrə növbəti addımlar aydınlaşdırılır.",
-      },
-    ],
-  },
-  en: {
-    heroLead:
-      "Examination, diagnostics, vaccination and paperwork are organized in one clinic so owners can understand the next step clearly.",
-    pathsEyebrow: "Start here",
-    pathsTitle: "Choose by situation, not by medical term",
-    pathsLead:
-      "Owners do not always know which service they need. These paths make the first step easier to understand.",
-    paths: [
-      {
-        title: "First visit or check-up",
-        description:
-          "The doctor starts with a general examination, then explains treatment or prevention clearly.",
-        highlight: "Clinical examination and therapy",
-      },
-      {
-        title: "Vaccines and documents",
-        description:
-          "Vaccination schedule, microchipping and veterinary passport steps can be planned together.",
-        highlight: "Vaccination, microchip, passport",
-      },
-      {
-        title: "Symptoms or behavior change",
-        description:
-          "If appetite, activity, skin, digestion or pain changes, the visit starts with a focused exam.",
-        highlight: "Therapy and initial diagnostics",
-      },
-      {
-        title: "Tests and imaging",
-        description:
-          "Laboratory work, X-ray and ultrasound help turn uncertainty into a clearer treatment decision.",
-        highlight: "Laboratory, radiology, ultrasound",
-      },
-    ],
-    guideEyebrow: "Service guide",
-    guideTitle: "What Alfavet can handle in one visit",
-    groups: [
-      {
-        title: "Everyday care",
-        description:
-          "A calm starting point for check-ups, vaccines and preventive health decisions.",
-        notes: [
-          "The doctor reviews general condition, appetite, activity and owner observations together.",
-          "Vaccination history, passport notes and preventive steps can be clarified in one visit.",
-          "If something needs a closer look, the next diagnostic step is explained clearly.",
-        ],
-      },
-      {
-        title: "Diagnostics",
-        description:
-          "Testing and imaging help the doctor make decisions from evidence, not guessing.",
-        notes: [
-          "Laboratory tests, X-ray and ultrasound help make treatment decisions more precise.",
-          "Findings are explained in practical language so the next step is easy to understand.",
-          "Diagnostics are planned around the examination, not as a confusing separate process.",
-        ],
-      },
-      {
-        title: "Treatment and procedures",
-        description:
-          "Therapy, dentistry and planned surgery are handled with preparation and follow-up.",
-        notes: [
-          "Treatment is chosen according to the pet's condition, age and test results.",
-          "For planned procedures, preparation and home-care instructions are explained in advance.",
-          "Follow-up and observation steps are clarified before the owner leaves.",
-        ],
-      },
-      {
-        title: "Documents and registration",
-        description:
-          "Vaccination history, identification and veterinary passport steps are kept in one flow.",
-        notes: [
-          "Passport, vaccine records and microchip information are checked in a clear order.",
-          "Travel and registration documents can be planned before they become urgent.",
-          "Owners understand which document is needed and why during the visit.",
-        ],
-      },
-    ],
-    processEyebrow: "Visit flow",
-    processTitle: "The visit follows a simple sequence",
-    processLead:
-      "The team first understands the situation, then plans examination, diagnostics and the next step.",
-    ctaTitle: "Let's clarify where your pet should start",
-    ctaLead:
-      "Send the symptoms or the service you need, and the team will suggest a suitable visit time.",
-    steps: [
-      {
-        title: "Request",
-        description: "Send a short note by phone, WhatsApp or the contact form.",
-      },
-      {
-        title: "Examination",
-        description: "The doctor checks the patient and explains any needed tests.",
-      },
-      {
-        title: "Plan",
-        description: "Treatment, follow-up and document steps are clarified before you leave.",
-      },
-    ],
-  },
-  ru: {
-    heroLead:
-      "Осмотр, диагностика, вакцинация и документы собраны в одной клинике, чтобы владелец быстро понимал следующий шаг.",
-    pathsEyebrow: "С чего начать",
-    pathsTitle: "Выбирайте не термин, а ситуацию",
-    pathsLead:
-      "Владелец не всегда знает, какая услуга нужна. Эти сценарии помогают быстрее понять первый шаг.",
-    paths: [
-      {
-        title: "Первый визит или осмотр",
-        description:
-          "Врач начинает с общего осмотра, затем спокойно объясняет лечение или профилактику.",
-        highlight: "Клинический осмотр и терапия",
-      },
-      {
-        title: "Вакцинация и документы",
-        description:
-          "График прививок, чипирование и ветеринарный паспорт можно спланировать в одном визите.",
-        highlight: "Вакцинация, чип, паспорт",
-      },
-      {
-        title: "Симптомы или изменения поведения",
-        description:
-          "Если изменились аппетит, активность, кожа, пищеварение или появилась боль, визит начинается с осмотра.",
-        highlight: "Терапия и первичная диагностика",
-      },
-      {
-        title: "Анализы и визуальная диагностика",
-        description:
-          "Лаборатория, рентген и УЗИ помогают принимать решение не наугад, а по фактам.",
-        highlight: "Лаборатория, рентген, УЗИ",
-      },
-    ],
-    guideEyebrow: "Гид по услугам",
-    guideTitle: "Что Alfavet может решить за один визит",
-    groups: [
-      {
-        title: "Повседневный уход",
-        description:
-          "Спокойная точка входа для осмотра, прививок и профилактических решений.",
-        notes: [
-          "Врач оценивает общее состояние, питание, активность и наблюдения владельца вместе.",
-          "Историю вакцинации, записи в паспорте и профилактические шаги можно уточнить за один визит.",
-          "Если нужно посмотреть глубже, врач спокойно объясняет следующий диагностический шаг.",
-        ],
-      },
-      {
-        title: "Диагностика",
-        description:
-          "Анализы и визуальная диагностика помогают врачу принимать решения по фактам.",
-        notes: [
-          "Лабораторные анализы, рентген и УЗИ помогают точнее понять причину состояния.",
-          "Результаты объясняются простым языком, чтобы владелец понимал следующий шаг.",
-          "Диагностика планируется вокруг осмотра и не ощущается как отдельный запутанный процесс.",
-        ],
-      },
-      {
-        title: "Лечение и процедуры",
-        description:
-          "Терапия, стоматология и плановые операции проходят с подготовкой и последующим контролем.",
-        notes: [
-          "План лечения подбирается под состояние, возраст и результаты обследования питомца.",
-          "Перед плановыми процедурами объясняются подготовка и правила ухода дома.",
-          "Повторный осмотр и наблюдение обсуждаются заранее, до завершения визита.",
-        ],
-      },
-      {
-        title: "Документы и регистрация",
-        description:
-          "История вакцинации, идентификация и ветеринарный паспорт собраны в понятный процесс.",
-        notes: [
-          "Ветеринарный паспорт, отметки о вакцинации и данные микрочипа проверяются по порядку.",
-          "Документы для поездок и регистрации лучше планировать заранее, а не в последний момент.",
-          "Владелец понимает, какой документ нужен и зачем он понадобится.",
-        ],
-      },
-    ],
-    processEyebrow: "Как проходит визит",
-    processTitle: "Приём идёт в простой последовательности",
-    processLead:
-      "Команда сначала разбирается в ситуации, затем планирует осмотр, диагностику и следующий шаг.",
-    ctaTitle: "Уточним, с чего лучше начать",
-    ctaLead:
-      "Опишите симптомы или нужную услугу, и команда предложит подходящее время приёма.",
-    steps: [
-      {
-        title: "Заявка",
-        description: "Оставьте короткое сообщение по телефону, в WhatsApp или через форму.",
-      },
-      {
-        title: "Осмотр",
-        description: "Врач осматривает пациента и объясняет, какие анализы могут понадобиться.",
-      },
-      {
-        title: "План",
-        description: "Лечение, повторный приём и документы обсуждаются до завершения визита.",
-      },
-    ],
-  },
-};
-
-export function ServicesPage() {
+export function ServicesPage({ initialService = null }: ServicesPageProps) {
   const { locale, t } = useAppSettings();
   const copy = pageCopy[locale];
-  const [activeGroup, setActiveGroup] = useState(0);
+  const initialGroupIndex = getServiceGroupIndex(initialService);
+  const initialServiceIndex = getServiceIndex(initialService);
+  const resolvedInitialGroup = initialGroupIndex >= 0 ? initialGroupIndex : 0;
+  const [activeGroup, setActiveGroup] = useState(
+    resolvedInitialGroup,
+  );
+  const [selectedService, setSelectedService] = useState<ServiceId | null>(
+    initialServiceIndex >= 0
+      ? serviceIds[initialServiceIndex]
+      : (getServicesForGroup(resolvedInitialGroup)[0] ?? null),
+  );
   const activeGroupCopy = copy.groups[activeGroup] ?? copy.groups[0];
   const ActiveGroupIcon = groupIcons[activeGroup] ?? Stethoscope;
+  const activeServiceIds = getServicesForGroup(activeGroup);
+  const activeSelectedService = selectedService ?? activeServiceIds[0] ?? null;
+  const selectedServiceIndex = activeSelectedService
+    ? getServiceIndex(activeSelectedService)
+    : -1;
+  const selectedServiceCopy =
+    selectedServiceIndex >= 0 ? t.services.items[selectedServiceIndex] : null;
+
+  useEffect(() => {
+    if (initialServiceIndex < 0) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      document
+        .getElementById("service-guide")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialServiceIndex]);
 
   return (
     <div className={styles.page}>
@@ -373,7 +105,7 @@ export function ServicesPage() {
       <main>
         <section className={styles.hero}>
           <Image
-            alt="Kitten care at Alfavet veterinary clinic"
+            alt={t.services.title}
             className={styles.heroImage}
             fill
             priority
@@ -431,7 +163,7 @@ export function ServicesPage() {
           </div>
         </section>
 
-        <section className={styles.guideSection}>
+        <section className={styles.guideSection} id="service-guide">
           <div className={styles.guideShell}>
             <div className={styles.guideIntro}>
               <p className={styles.eyebrow}>{copy.guideEyebrow}</p>
@@ -452,7 +184,10 @@ export function ServicesPage() {
                     aria-selected={isActive}
                     className={`${styles.groupTab} ${isActive ? styles.groupTabActive : ""}`}
                     key={group.title}
-                    onClick={() => setActiveGroup(index)}
+                    onClick={() => {
+                      setActiveGroup(index);
+                      setSelectedService(getServicesForGroup(index)[0] ?? null);
+                    }}
                     role="tab"
                     type="button"
                   >
@@ -477,6 +212,36 @@ export function ServicesPage() {
                   <li key={note}>{note}</li>
                 ))}
               </ul>
+              <div className={styles.servicePills}>
+                {activeServiceIds.map((serviceId) => {
+                  const serviceIndex = getServiceIndex(serviceId);
+                  const service = t.services.items[serviceIndex];
+                  const ServiceIcon = serviceIcons[serviceIndex] ?? Stethoscope;
+                  const isSelected = activeSelectedService === serviceId;
+
+                  return (
+                    <button
+                      aria-pressed={isSelected}
+                      className={`${styles.servicePill} ${
+                        isSelected ? styles.servicePillActive : ""
+                      }`}
+                      key={serviceId}
+                      onClick={() => setSelectedService(serviceId)}
+                      type="button"
+                    >
+                      <ServiceIcon aria-hidden="true" />
+                      <span>{service.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedServiceCopy ? (
+                <div className={styles.selectedService}>
+                  <span>{String(selectedServiceIndex + 1).padStart(2, "0")}</span>
+                  <h4>{selectedServiceCopy.title}</h4>
+                  <p>{selectedServiceCopy.description}</p>
+                </div>
+              ) : null}
             </article>
           </div>
         </section>

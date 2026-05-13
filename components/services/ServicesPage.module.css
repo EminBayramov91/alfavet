@@ -97,6 +97,10 @@
   background: var(--color-section);
 }
 
+.guideSection {
+  scroll-margin-top: 110px;
+}
+
 .pathGrid,
 .guideShell,
 .processShell,
@@ -338,6 +342,91 @@
   border-radius: 999px;
 }
 
+.servicePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 760px;
+  padding-top: 6px;
+}
+
+.servicePill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  color: var(--color-heading);
+  cursor: pointer;
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.servicePill:hover,
+.servicePillActive,
+.servicePillActive:hover {
+  color: #061417;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.servicePill:focus-visible {
+  outline: 3px solid var(--color-amber);
+  outline-offset: 3px;
+}
+
+.servicePill svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  color: var(--color-accent-strong);
+  stroke-width: 2.2;
+}
+
+.servicePill:hover svg,
+.servicePillActive svg,
+.servicePillActive:hover svg {
+  color: #061417;
+}
+
+.servicePill span {
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.selectedService {
+  display: grid;
+  gap: 8px;
+  max-width: 520px;
+  padding-left: 16px;
+  border-left: 2px solid var(--color-accent);
+}
+
+.selectedService span {
+  color: var(--color-coral);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.selectedService h4 {
+  color: var(--color-heading);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.selectedService p {
+  color: var(--color-text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
 .processShell {
   display: grid;
   grid-template-columns: minmax(280px, 0.86fr) minmax(0, 1.14fr);
@@ -519,6 +608,27 @@
 
   .groupHeader {
     grid-template-columns: 1fr;
+  }
+
+  .servicePills {
+    flex-wrap: nowrap;
+    padding-right: var(--page-gutter);
+    padding-bottom: 10px;
+    padding-left: var(--page-gutter);
+    margin-right: calc(var(--page-gutter) * -1);
+    margin-left: calc(var(--page-gutter) * -1);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .servicePills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .servicePill {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
   }
 
   .timeline::before {
