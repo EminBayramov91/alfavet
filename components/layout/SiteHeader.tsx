@@ -10,6 +10,7 @@ import { useAppSettings } from "@/app/providers";
 import styles from "./SiteHeader.module.css";
 
 const navItems = [
+  { href: "/", key: "home" },
   { href: "/about", key: "about" },
   { href: "/services", key: "services" },
   { href: "/gallery", key: "gallery" },
@@ -79,7 +80,9 @@ export function SiteHeader() {
         <nav aria-label="Primary navigation" className={styles.desktopNav}>
           {navItems.map((item) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
             const linkClassName = [
               styles.navLink,
               isActive ? styles.navLinkActive : "",
@@ -162,7 +165,9 @@ export function SiteHeader() {
 
           {navItems.map((item) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+              item.href === "/"
+                ? pathname === "/"
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
             const linkClassName = [
               styles.mobileLink,
               isActive ? styles.mobileLinkActive : "",

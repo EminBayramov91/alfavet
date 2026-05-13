@@ -138,9 +138,11 @@
     background 180ms ease;
 }
 
-.pathCard:hover {
-  border-color: rgba(255, 138, 91, 0.5);
-  transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+  .pathCard:hover {
+    border-color: rgba(255, 138, 91, 0.5);
+    transform: translateY(-3px);
+  }
 }
 
 .pathIcon,
@@ -603,13 +605,12 @@
 
   .pathGrid {
     display: flex;
-    gap: 14px;
-    padding-right: var(--page-gutter);
-    padding-bottom: 8px;
-    padding-left: var(--page-gutter);
-    margin-right: calc(var(--page-gutter) * -1);
-    margin-left: calc(var(--page-gutter) * -1);
+    grid-template-columns: none;
+    gap: 12px;
+    padding-bottom: 14px;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--page-gutter);
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -621,18 +622,43 @@
   }
 
   .pathCard {
-    flex: 0 0 min(300px, calc(100vw - (var(--page-gutter) * 3)));
-    min-height: 320px;
-    padding: 22px;
+    align-content: start;
+    flex: 0 0 min(78vw, 310px);
+    gap: 14px;
+    min-height: 188px;
+    padding: 20px;
+    background: var(--color-surface);
+    border-radius: 8px;
     scroll-snap-align: start;
+    transform: none;
+  }
+
+  .pathCard:hover {
+    border-color: var(--color-border);
+    transform: none;
   }
 
   .pathCard h2 {
-    font-size: clamp(26px, 8.4vw, 34px);
+    max-width: 100%;
+    font-size: 18px;
+    line-height: 1.25;
   }
 
   .pathCard span {
-    width: 100%;
+    width: fit-content;
+    font-size: 12px;
+    border-radius: 999px;
+  }
+
+  .pathIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
+
+  .pathIcon svg {
+    width: 24px;
+    height: 24px;
   }
 
   .ctaPanel {
@@ -695,6 +721,10 @@
 }
 
 @media (max-width: 380px) {
+  .pathCard {
+    flex-basis: 82vw;
+  }
+
   .guideIntro h2,
   .processIntro h2,
   .ctaPanel h2 {
